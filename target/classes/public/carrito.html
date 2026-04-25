@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - Vinylcrate</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/carrito-api.js"></script>
+</head>
+<body>
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="contenedor-header">
+      <h1><img src="https://www.andiar.com/4485-thickbox_default/vinilo-disco-vinilo-mac.jpg" alt="Vinyl" style="height: 56px; width: 56px; vertical-align: middle; margin-right: 8px;"> Vinylcrate</h1>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="productos.html">Productos</a>
+        <a href="carrito.html">Carrito</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main>
+    <div class="container">
+      <h1 style="text-align: center; margin-bottom: 30px;">Tu Carrito</h1>
+
+      <!-- TABLA DEL CARRITO -->
+      <div class="contenedor-pagina" style="margin-bottom: 30px;">
+        <h2>Artículos en tu Carrito</h2>
+        
+        <div id="contenido-carrito"></div>
+
+        <div style="margin-top: 30px; text-align: right; padding-top: 20px; border-top: 2px solid var(--color-borde);">
+          <p style="font-size: 18px; margin: 10px 0;">
+            <strong>Subtotal:</strong> <span id="subtotal" style="color: var(--color-primario); font-size: 20px;">€0,00</span>
+          </p>
+          <p style="font-size: 18px; margin: 10px 0;">
+            <strong>Envío:</strong> <span style="color: var(--color-primario); font-size: 20px;">€5,00</span>
+          </p>
+          <p style="font-size: 22px; margin: 20px 0; padding-top: 15px; border-top: 2px solid var(--color-primario);">
+            <strong>Total:</strong> <span id="total" style="color: var(--color-primario); font-size: 28px; font-weight: bold;">€0,00</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- INFORMACIÓN DE ENVÍO -->
+      <div class="contenedor-pagina" style="margin-bottom: 30px;">
+        <h2>Información de Envío</h2>
+        
+        <form>
+          <div class="campo-grupo">
+            <div class="campo-formulario">
+              <label>Nombre Completo *</label>
+              <input type="text" id="nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="campo-formulario">
+              <label>Email *</label>
+              <input type="email" id="email" placeholder="tu@email.com" required>
+            </div>
+          </div>
+
+          <div class="campo-grupo">
+            <div class="campo-formulario">
+              <label>Dirección *</label>
+              <input type="text" id="direccion" placeholder="Tu dirección" required>
+            </div>
+            <div class="campo-formulario">
+              <label>Código Postal *</label>
+              <input type="text" id="codigopostal" placeholder="Tu código postal" required>
+            </div>
+          </div>
+
+          <div class="campo-grupo">
+            <div class="campo-formulario">
+              <label>Ciudad *</label>
+              <input type="text" id="ciudad" placeholder="Tu ciudad" required>
+            </div>
+            <div class="campo-formulario">
+              <label>País *</label>
+              <input type="text" id="pais" placeholder="Tu país" required>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- MÉTODO DE PAGO -->
+      <div class="contenedor-pagina" style="margin-bottom: 30px;">
+        <h2>Método de Pago</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0;">
+          <label style="display: flex; align-items: center; padding: 15px; border: 2px solid var(--color-borde); border-radius: 8px; cursor: pointer; background: var(--color-fondo-claro);">
+            <input type="radio" name="pago" value="tarjeta" style="width: 20px; height: 20px; cursor: pointer;">
+            <span style="margin-left: 10px; font-weight: 600;">Tarjeta Crédito</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 15px; border: 2px solid var(--color-borde); border-radius: 8px; cursor: pointer; background: var(--color-fondo-claro);">
+            <input type="radio" name="pago" value="paypal" style="width: 20px; height: 20px; cursor: pointer;">
+            <span style="margin-left: 10px; font-weight: 600;">PayPal</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 15px; border: 2px solid var(--color-borde); border-radius: 8px; cursor: pointer; background: var(--color-fondo-claro);">
+            <input type="radio" name="pago" value="transferencia" style="width: 20px; height: 20px; cursor: pointer;">
+            <span style="margin-left: 10px; font-weight: 600;">Transferencia</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 50px 0;">
+        <a href="productos.html" class="boton boton-secundario" style="padding: 15px 30px;">
+          ← Seguir Comprando
+        </a>
+        <button id="btn-completar" class="boton boton-primario" style="padding: 15px 40px; font-size: 16px;">
+          ✓ Completar Compra
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>© 2024 Vinylcrate - Tienda de Vinilos Online</strong></p>
+    <p>Descubre, colecciona y disfruta de la mejor música en vinilo</p>
+  </footer>
+
+  <!-- MODAL DE CONFIRMACIÓN DE COMPRA (DOS PASOS) -->
+  <div id="modal-compra" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+       background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--color-fondo-claro); padding:40px; border-radius:12px;
+         width:90%; max-width:400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+
+      <!-- PASO 1: Formulario de datos -->
+      <div id="modal-paso1">
+        <h2 style="margin-top:0;">Tus datos</h2>
+        <p style="color:var(--color-texto-claro);">Introduce tu nombre y email para asociarlos al pedido</p>
+
+        <div class="campo-formulario" style="margin-bottom:15px;">
+          <label>Nombre *</label>
+          <input type="text" id="modal-nombre" placeholder="Tu nombre completo">
+        </div>
+        <div class="campo-formulario" style="margin-bottom:25px;">
+          <label>Email *</label>
+          <input type="email" id="modal-email" placeholder="tu@email.com">
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button id="modal-cancelar" class="boton boton-secundario">Cancelar</button>
+          <button id="modal-siguiente" class="boton boton-primario">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- PASO 2: Confirmación final -->
+      <div id="modal-paso2" style="display:none;">
+        <h2 style="margin-top:0;">Confirmar Compra</h2>
+        <p style="color:var(--color-texto-claro);">¿Deseas finalizar tu pedido?</p>
+
+        <div style="background:var(--color-fondo); border-radius:8px; padding:15px; margin-bottom:25px;">
+          <p style="margin:5px 0;"><strong>Nombre:</strong> <span id="resumen-nombre"></span></p>
+          <p style="margin:5px 0;"><strong>Email:</strong> <span id="resumen-email"></span></p>
+          <p style="margin:5px 0;"><strong>Total:</strong> <span id="resumen-total"></span></p>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button id="modal-volver" class="boton boton-secundario">← Volver</button>
+          <button id="modal-confirmar" class="boton boton-primario">✓ Confirmar Pedido</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const PRECIO_ENVIO = 5.00;
+
+    async function cargarCarrito() {
+      try {
+        const lineas = await CarritoAPI.obtenerLineasCarrito();
+        const contenedor = document.getElementById('contenido-carrito');
+
+        if (!lineas || lineas.length === 0) {
+          contenedor.innerHTML = '<p style="text-align: center; color: var(--color-texto-claro); padding: 30px;">Tu carrito está vacío</p>';
+          actualizarTotales(0);
+          return;
+        }
+
+        let html = '<table class="tabla-contenedor"><thead><tr>';
+        html += '<th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th>Acciones</th>';
+        html += '</tr></thead><tbody>';
+
+        const nombres = JSON.parse(localStorage.getItem('articuloNombres') || '{}');
+
+        lineas.forEach(linea => {
+          const subtotal = linea.costeLinea || (linea.precioUnitario * linea.numeroUnidades);
+          const precioFormato = linea.precioUnitario.toFixed(2).replace('.', ',');
+          const subtotalFormato = subtotal.toFixed(2).replace('.', ',');
+          const nombreArticulo = nombres[linea.idArticulo] || 'Artículo ' + linea.idArticulo;
+
+          html += '<tr>';
+          html += '<td style="font-weight: 600;">' + nombreArticulo + '</td>';
+          html += '<td>€' + precioFormato + '</td>';
+          html += '<td>' + linea.numeroUnidades + '</td>';
+          html += '<td>€' + subtotalFormato + '</td>';
+          html += '<td><button class="boton boton-peligro btn-eliminar" data-id="' + linea.idLineaCarrito + '" style="padding: 6px 12px; font-size: 12px;">Eliminar</button></td>';
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        contenedor.innerHTML = html;
+
+
+        document.querySelectorAll('.btn-eliminar').forEach(btn => {
+          btn.addEventListener('click', async function() {
+            const idLinea = this.dataset.id;
+            if (confirm('¿Deseas eliminar este artículo del carrito?')) {
+              await CarritoAPI.eliminarLineaCarrito(idLinea);
+              await cargarCarrito();
+            }
+          });
+        });
+
+
+        const totalCarrito = lineas.reduce((sum, linea) =>
+          sum + (linea.costeLinea || (linea.precioUnitario * linea.numeroUnidades)), 0);
+        actualizarTotales(totalCarrito);
+
+      } catch (error) {
+        console.error('Error al cargar carrito:', error);
+        document.getElementById('contenido-carrito').innerHTML =
+          '<p style="color: red;">Error al cargar el carrito. Por favor, recarga la página.</p>';
+      }
+    }
+
+    function actualizarTotales(subtotal) {
+      const total = subtotal + PRECIO_ENVIO;
+      document.getElementById('subtotal').textContent = '€' + subtotal.toFixed(2).replace('.', ',');
+      document.getElementById('total').textContent = '€' + total.toFixed(2).replace('.', ',');
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarCarrito();
+
+      document.getElementById('btn-completar').addEventListener('click', async function(e) {
+        e.preventDefault();
+
+        const lineas = await CarritoAPI.obtenerLineasCarrito();
+        if (!lineas || lineas.length === 0) {
+          alert('Tu carrito está vacío');
+          return;
+        }
+
+        document.getElementById('modal-compra').style.display = 'flex';
+      });
+
+
+      document.getElementById('modal-cancelar').addEventListener('click', function() {
+        document.getElementById('modal-compra').style.display = 'none';
+        document.getElementById('modal-paso1').style.display = 'block';
+        document.getElementById('modal-paso2').style.display = 'none';
+      });
+
+   
+      document.getElementById('modal-siguiente').addEventListener('click', async function() {
+        const nombre = document.getElementById('modal-nombre').value.trim();
+        const email = document.getElementById('modal-email').value.trim();
+
+        if (!nombre || !email) {
+          alert('Por favor rellena todos los campos');
+          return;
+        }
+
+        const carritoId = CarritoAPI.getCarritoIdActual();
+
+        try {
+          const responsePut = await fetch(`/api/carrito/${carritoId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              idUsuario: 1,
+              correo: email,
+              totalPrecio: 0
+            })
+          });
+
+          if (!responsePut.ok) throw new Error('Error al actualizar carrito');
+
+          document.getElementById('resumen-nombre').textContent = nombre;
+          document.getElementById('resumen-email').textContent = email;
+          document.getElementById('resumen-total').textContent =
+            document.getElementById('total').textContent;
+
+          document.getElementById('modal-paso1').style.display = 'none';
+          document.getElementById('modal-paso2').style.display = 'block';
+
+        } catch (error) {
+          console.error('Error al actualizar carrito:', error);
+          alert('Error al guardar los datos. Inténtalo de nuevo.');
+        }
+      });
+
+
+      document.getElementById('modal-volver').addEventListener('click', function() {
+        document.getElementById('modal-paso1').style.display = 'block';
+        document.getElementById('modal-paso2').style.display = 'none';
+      });
+
+
+      document.getElementById('modal-confirmar').addEventListener('click', async function() {
+        const nombre = document.getElementById('modal-nombre').value.trim();
+        const email = document.getElementById('modal-email').value.trim();
+        const carritoId = CarritoAPI.getCarritoIdActual();
+
+        try {
+          await fetch(`/api/carrito/${carritoId}`, { method: 'DELETE' });
+
+          CarritoAPI.limpiarCarritoLocal();
+
+          document.getElementById('modal-compra').style.display = 'none';
+          document.getElementById('modal-paso1').style.display = 'block';
+          document.getElementById('modal-paso2').style.display = 'none';
+
+          document.getElementById('contenido-carrito').innerHTML = `
+            <div style="text-align:center; padding:40px;">
+              <div style="font-size:60px; margin-bottom:20px;">✓</div>
+              <h2 style="color:var(--color-primario);">¡Compra realizada con éxito!</h2>
+              <p style="color:var(--color-texto-claro);">Gracias <strong>${nombre}</strong>,
+              hemos enviado la confirmación a <strong>${email}</strong></p>
+              <a href="productos.html" class="boton boton-primario" style="margin-top:20px; display:inline-block;">
+                Seguir comprando
+              </a>
+            </div>`;
+          actualizarTotales(0);
+
+        } catch (error) {
+          console.error('Error al completar compra:', error);
+          alert('Error al procesar la compra. Inténtalo de nuevo.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
